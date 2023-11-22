@@ -1,0 +1,28 @@
+{
+    "files.associations": {
+        "**/.dockerignore": "ignore",
+        "**/.ini": "properties",
+    },
+    "files.exclude": {
+        "**/__pycache__/**": true,
+        "**/.mypy_cache/**": true,
+        "**/.pytest_cache/**": true,
+        "**/venv/**": true,
+    },
+    "editor.formatOnSave": true,
+    "editor.minimap.maxColumn": 99,
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    },
+    "black-formatter.importStrategy": "fromEnvironment",
+    "python.testing.pytestArgs": [
+        "--cov",
+        "api",
+        "--cov-report",
+        "xml:api/coverage.xml"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+}

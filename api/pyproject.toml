@@ -1,0 +1,30 @@
+[tool.bandit]
+exclude_dirs = ["tests"]
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+line_length = 79
+lines_between_types = 1
+profile = "black"
+remove_redundant_aliases = true
+#skip = ["migrations"]
+wrap_length = 79
+
+[tool.mypy]
+#plugins = "sqlmypy"
+#exclude = "migrations"
+show_error_context = true
+show_error_codes = true
+strict = true
+
+disallow_any_generics = false
+disallow_any_unimported = false
+disallow_subclassing_any = false
+disallow_untyped_defs = true
+disallow_untyped_calls = false
+ignore_missing_imports = true
+no_implicit_optional = true
+warn_return_any = true
+warn_unused_ignores = true
