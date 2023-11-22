@@ -11,6 +11,7 @@ on:
       - frontend/**
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
 jobs:
   test:
     timeout-minutes: 60
