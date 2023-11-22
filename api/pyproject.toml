@@ -28,3 +28,37 @@ ignore_missing_imports = true
 no_implicit_optional = true
 warn_return_any = true
 warn_unused_ignores = true
+
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "Archive Binge API"
+authors = ["Madeleine Ethridge <madeleine.ethridge@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.104.0"
+uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
+
+[tool.poetry.group.pytest.dependencies]
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+httpx = "^0.25.1"
+
+[tool.poetry.group.bandit.dependencies]
+bandit = {extras = ["toml"], version = "^1.7.5"}
+
+[tool.poetry.group.lint.dependencies]
+black = "^23.11.0"
+flake8 = "^6.1.0"
+isort = "^5.12.0"
+mypy = "^1.7.0"
+
+
+[tool.poetry.group.dev.dependencies]
+tox = "^4.11.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

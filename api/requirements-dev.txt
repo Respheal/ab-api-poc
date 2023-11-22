@@ -1,4 +1,0 @@
--r requirements/bandit.txt
--r requirements/flake.txt
--r requirements/mypy.txt
--r requirements/pytest.txt
