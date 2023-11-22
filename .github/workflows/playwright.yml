@@ -1,7 +1,14 @@
 name: Playwright Tests
+
+defaults:
+  run:
+    working-directory: ./frontend
+
 on:
   push:
     branches: [main, master]
+    paths:
+      - frontend/**
   pull_request:
     branches: [main, master]
 jobs:
