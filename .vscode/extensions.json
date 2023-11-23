@@ -8,6 +8,7 @@
         "dbaeumer.vscode-eslint",
         "ms-playwright.playwright",
         "github.vscode-github-actions",
-        "ms-python.mypy-type-checker"
+        "ms-python.mypy-type-checker",
+        "tamasfe.even-better-toml"
     ]
   }

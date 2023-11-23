@@ -1,6 +1,23 @@
-# ab-api-poc
+# Archive Binge Recoded
 
-[![Python application](https://github.com/Respheal/ab-api-poc/actions/workflows/python-app.yml/badge.svg)](https://github.com/Respheal/ab-api-poc/actions/workflows/python-app.yml)[![Playwright Tests](https://github.com/Respheal/ab-api-poc/actions/workflows/playwright.yml/badge.svg)](https://github.com/Respheal/ab-api-poc/actions/workflows/playwright.yml)
+[![Pytest (API)](https://github.com/Respheal/ab-api-poc/actions/workflows/python-app.yml/badge.svg)](https://github.com/Respheal/ab-api-poc/actions/workflows/python-app.yml) [![Playwright (Frontend)](https://github.com/Respheal/ab-api-poc/actions/workflows/playwright.yml/badge.svg)](https://github.com/Respheal/ab-api-poc/actions/workflows/playwright.yml) [![codecov (API)](https://codecov.io/gh/Respheal/ab-api-poc/graph/badge.svg?token=ITKPPU0K2A)](https://codecov.io/gh/Respheal/ab-api-poc)
+
+## API
+
+The API is a FastAPI application. In production, it uses PostgreSQL and Celery to process requests and store data. In local development, the database is replaced with SQLite.
+
+### Getting Started
+
+Launch the API locally by installing all dependencies and running uvicorn:
+
+````bash
+cd api
+poetry install
+uvicorn api.app.main:app --reload```
+
+### Learn More
+
+-   [FastAPI](https://fastapi.tiangolo.com/)
 
 ## Frontend
 
@@ -8,32 +25,23 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ### Getting Started
 
-First, run the development server:
+Install dependencies and run the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+````
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Pages and components live in frontend/src/app.
 
 ### Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the packages used, take a look at the following resources:
 
--   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
--   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+-   [Next.js Documentation](https://nextjs.org/docs)
+-   [Learn Next.js](https://nextjs.org/learn)
+-   [React Bootstrap](https://react-bootstrap.github.io/docs/getting-started/introduction)
+-   [Axios](https://axios-http.com/docs/intro)
 
 ### Deploy
 
