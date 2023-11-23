@@ -4,6 +4,8 @@ from app.main import app
 
 client = TestClient(app)
 
+example = lambda: "example"
+
 
 def test_read_main():
     response = client.get("/")

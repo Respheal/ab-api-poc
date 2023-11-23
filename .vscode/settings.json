@@ -25,4 +25,9 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
+    "mypy-type-checker.interpreter": [],
+    "mypy-type-checker.args": [
+        "--config-file=${workspaceFolder}/api/pyproject.toml"
+    ],
+    "mypy-type-checker.preferDaemon": true
 }

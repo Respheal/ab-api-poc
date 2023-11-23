@@ -38,3 +38,11 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ### Deploy
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+### Notes:
+
+-   Have poetry installed (via pipx)
+-   cd api, poetry install
+-   cd frontend, npm install
+-   install Playwright browsers:
+    -- npx playwright install chromium firefox webkit // I had a hiccup at this step, not convinced playwright fully installed?
