@@ -10,10 +10,11 @@ The API is a FastAPI application. In production, it uses PostgreSQL and Celery t
 
 Launch the API locally by installing all dependencies and running uvicorn:
 
-````bash
+```bash
 cd api
 poetry install
-uvicorn api.app.main:app --reload```
+uvicorn api.app.main:app --reload
+```
 
 ### Learn More
 
@@ -30,7 +31,7 @@ Install dependencies and run the development server:
 ```bash
 npm install
 npm run dev
-````
+```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Pages and components live in frontend/src/app.
 
