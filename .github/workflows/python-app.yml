@@ -39,8 +39,14 @@ jobs:
       - name: Install Dependencies
         run: poetry install
 
-      - name: Run Tox
-        run: poetry run tox
+      - name: Run Tox (Lint)
+        run: poetry run tox -e lint
+
+      - name: Run Tox (Pytest)
+        run: poetry run tox -e pytest
+
+      - name: Coverage Report
+        run: poetry run tox -e coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

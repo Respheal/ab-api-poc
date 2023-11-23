@@ -39,7 +39,6 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.104.0"
-uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
 
 [tool.poetry.group.pytest.dependencies]
 pytest = "^7.4.3"
@@ -60,6 +59,10 @@ tox = "^4.11.3"
 
 [tool.poetry.group.coverage.dependencies]
 coverage = "^7.3.2"
+
+
+[tool.poetry.group.server.dependencies]
+uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
 
 [build-system]
 requires = ["poetry-core"]
