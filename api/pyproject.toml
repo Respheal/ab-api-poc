@@ -9,6 +9,9 @@ python = "^3.12"
 fastapi = "^0.104.0"
 celery = "^5.3.6"
 redis = "^5.0.1"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
+lxml = "^4.9.3"
 
 [tool.poetry.group.pytest.dependencies]
 pytest = "^7.4.3"
@@ -23,6 +26,7 @@ black = "^23.11.0"
 flake8 = "^6.1.0"
 isort = "^5.12.0"
 mypy = "^1.7.0"
+types-requests = "^2.31.0.10"
 
 [tool.poetry.group.dev.dependencies]
 tox = "^4.11.3"
