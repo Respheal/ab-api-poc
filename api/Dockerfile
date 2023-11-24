@@ -18,6 +18,8 @@ ENV VIRTUAL_ENV=/poetry/.venv \
     PATH="/poetry/.venv/bin:$PATH"
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-COPY ./app /app
+COPY ./commands /commands
+RUN sed -i 's/\r$//g' /commands/api
+RUN chmod -R +x /commands
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+COPY ./app /app
