@@ -20,8 +20,5 @@ def read_test() -> dict[str, str]:
 
 
 @celery.task
-def divide(x, y):
-    import time
-
-    time.sleep(5)
-    return x / y
+def divide(x: int, y: int) -> float:
+    return float(x / y)
