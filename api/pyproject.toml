@@ -9,6 +9,10 @@ python = "^3.12"
 fastapi = "^0.104.0"
 celery = "^5.3.6"
 redis = "^5.0.1"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
+lxml = "^4.9.3"
+pydantic = "<2.0.0"
 sqlmodel = "^0.0.12"
 
 [tool.poetry.group.pytest.dependencies]
@@ -24,6 +28,7 @@ black = "^23.11.0"
 flake8 = "^6.1.0"
 isort = "^5.12.0"
 mypy = "^1.7.0"
+types-requests = "^2.31.0.10"
 
 [tool.poetry.group.dev.dependencies]
 tox = "^4.11.3"
@@ -64,6 +69,7 @@ disallow_any_unimported = false
 disallow_subclassing_any = false
 disallow_untyped_defs = true
 disallow_untyped_calls = false
+disallow_untyped_decorators = false
 ignore_missing_imports = true
 no_implicit_optional = true
 warn_return_any = true
