@@ -1,4 +1,11 @@
 from sqlmodel import Field, SQLModel, Relationship
+from pydantic import BaseModel
+
+
+class HealthCheck(BaseModel):
+    name: str
+    version: str
+    description: str
 
 
 class UserBase(SQLModel):

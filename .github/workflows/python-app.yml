@@ -7,7 +7,7 @@ defaults:
 
 on:
   push:
-    # branches: ["main"]
+    branches: ["main"]
     paths:
       - api/**/*.py
       - poetry.lock
