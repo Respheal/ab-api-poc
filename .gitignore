@@ -34,5 +34,5 @@ node_modules/
 # config
 .env/.env.prod
 
-# development
-database.db
+# development databases
+*.db

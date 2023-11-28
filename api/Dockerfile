@@ -22,4 +22,7 @@ COPY ./commands /commands
 RUN sed -i 's/\r$//g' /commands/api
 RUN chmod -R +x /commands
 
+COPY ./alembic.ini /alembic.ini
+COPY ./migrations /migrations
+
 COPY ./app /app

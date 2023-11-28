@@ -1,7 +1,8 @@
 from typing import Sequence
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db.models import (
     RecipeCreate,
@@ -20,13 +21,17 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[RecipeRead])
-def read_recipes(session: Session = Depends(get_session)) -> Sequence[Recipe]:
+def read_recipes(
+    session: AsyncSession = Depends(get_session),
+) -> Sequence[Recipe]:
     recipes = session.exec(select(Recipe)).all()
     return recipes
 
 
 @router.get("/", response_model=RecipeReadWithUser)
-def read_recipe(*, session: Session = Depends(get_session), id: int) -> Recipe:
+def read_recipe(
+    *, session: AsyncSession = Depends(get_session), id: int
+) -> Recipe:
     recipe = session.get(Recipe, id)
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
@@ -35,7 +40,7 @@ def read_recipe(*, session: Session = Depends(get_session), id: int) -> Recipe:
 
 @router.post("/", response_model=RecipeRead)
 def create_recipe(
-    *, session: Session = Depends(get_session), recipe: RecipeCreate
+    *, session: AsyncSession = Depends(get_session), recipe: RecipeCreate
 ) -> Recipe:
     db_recipe = Recipe.from_orm(recipe)
     db_recipe.submitter_id = 1

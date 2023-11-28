@@ -1,7 +1,8 @@
 from typing import Sequence
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db.models import (
     User,
@@ -17,13 +18,13 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[User])
-def read_users(session: Session = Depends(get_session)) -> Sequence[User]:
+def read_users(session: AsyncSession = Depends(get_session)) -> Sequence[User]:
     return session.exec(select(User)).all()
 
 
 @router.get("/{user_id}", response_model=UserReadWithRecipes)
 def read_user(
-    *, session: Session = Depends(get_session), user_id: int
+    *, session: AsyncSession = Depends(get_session), user_id: int
 ) -> User:
     user = session.get(User, user_id)
     if not user:
@@ -33,7 +34,7 @@ def read_user(
 
 @router.post("/", response_model=User)
 def create_user(
-    *, session: Session = Depends(get_session), user: User
+    *, session: AsyncSession = Depends(get_session), user: User
 ) -> User:
     db_user = User.from_orm(user)
     session.add(db_user)

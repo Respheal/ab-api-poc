@@ -4,10 +4,10 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     # Base
     debug: bool = False
-    project_name: str
-    version: str
-    description: str
-    environment: str
+    project_name: str = "project_name"
+    version: str = "0.0.0"
+    description: str = ""
+    environment: str = "development"
 
     # Database
     postgres_host: str | None

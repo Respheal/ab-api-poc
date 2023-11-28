@@ -1,5 +1,4 @@
 #!/bin/sh
 
-# check if postgres is alive
-# alembic upgrade head
+alembic upgrade head
 uvicorn app.main:app --host 0.0.0.0

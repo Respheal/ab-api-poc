@@ -1,3 +1,6 @@
+volumes:
+  postgres_data:
+
 services:
   api:
     image: api
@@ -15,8 +18,8 @@ services:
 
   postgres:
     image: postgres
-    # volumes:
-    #   - postgres_data:/var/lib/postgresql/data/
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env/.env.prod
     healthcheck:

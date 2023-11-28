@@ -1,48 +1,49 @@
-from collections.abc import Generator
-
-from sqlalchemy import Engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import SQLModel, create_engine, Session
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app import settings
+from app import get_settings
 
-engine: AsyncEngine | Engine
+settings = get_settings()
 
 if settings.environment == "production":
     # Use postgres
-    engine = create_async_engine(
-        (
-            "postgresql+asyncpg://"
-            f"{settings.postgres_user}:{settings.postgres_password}"
-            f"@{settings.postgres_host}/{settings.postgres_db}"
-        ),
-        echo=True,
+    SQLALCHEMY_URL: str = (
+        "postgresql+asyncpg://"
+        f"{settings.postgres_user}:{settings.postgres_password}"
+        f"@{settings.postgres_host}/{settings.postgres_db}"
+    )
+    engine: AsyncEngine = create_async_engine(
+        SQLALCHEMY_URL,
+        echo=False,
         pool_pre_ping=True,
         pool_size=64,
         max_overflow=200,
     )
+if settings.environment == "test":
+    SQLALCHEMY_URL = "sqlite+aiosqlite:///test.db"
+    engine = create_async_engine(
+        SQLALCHEMY_URL,
+        echo=False,
+        pool_pre_ping=True,
+        connect_args={"check_same_thread": False},
+    )
 else:
-    engine = create_engine(
-        "sqlite:///database.db",
-        echo=True,
+    SQLALCHEMY_URL = "sqlite+aiosqlite:///database.db"
+    engine = create_async_engine(
+        SQLALCHEMY_URL,
+        echo=False,
         pool_pre_ping=True,
         connect_args={"check_same_thread": False},
     )
 
 
-def create_db_and_tables() -> None:
-    SQLModel.metadata.create_all(engine)
+async_session = sessionmaker(
+    bind=engine, class_=AsyncSession, expire_on_commit=False
+)
 
 
-async def get_session() -> Generator[AsyncSession | Session, None, None]:
-    if settings.environment == "production":
-        async_session = sessionmaker(
-            bind=engine, class_=AsyncSession, expire_on_commit=False
-        )
-        async with async_session() as session:
-            yield session
-    else:
-        with Session(engine) as session:
-            yield session
+# get_session Dependency
+async def get_session() -> AsyncSession:
+    async with async_session() as session:
+        yield session
