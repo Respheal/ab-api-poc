@@ -91,4 +91,4 @@ warn_unused_ignores = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 filterwarnings = ['ignore:datetime.datetime.utcfromtimestamp\(\) is deprecated']
-env_files = [".env/.env.test"]
+env_files = [".env/.env.dev"]

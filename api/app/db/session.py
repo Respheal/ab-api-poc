@@ -31,7 +31,7 @@ if settings.environment == "production":
         pool_size=64,
         max_overflow=200,
     )
-elif settings.environment == "development":
+else:
     SQLALCHEMY_URL = rf"{sqlite_path}/database.db"
     engine = create_async_engine(
         SQLALCHEMY_URL,
@@ -39,15 +39,6 @@ elif settings.environment == "development":
         pool_pre_ping=True,
         connect_args={"check_same_thread": False},
     )
-else:
-    SQLALCHEMY_URL = rf"{sqlite_path}/test.db"
-    engine = create_async_engine(
-        SQLALCHEMY_URL,
-        echo=True,
-        pool_pre_ping=True,
-        connect_args={"check_same_thread": False},
-    )
-
 
 async_session = async_sessionmaker(
     bind=engine, class_=AsyncSession, expire_on_commit=False

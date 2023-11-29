@@ -6,7 +6,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db.models import (
     User,
-    UserReadWithRecipes,
+    UserCreate,
+    # UserReadWithRecipes,
 )
 from app.db.session import get_session
 
@@ -26,19 +27,19 @@ async def read_users(
     return users.all()
 
 
-@router.get("/{user_id}", response_model=UserReadWithRecipes)
-async def read_user(
-    *, session: AsyncSession = Depends(get_session), user_id: int
-) -> User:
-    user = await session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
+# @router.get("/{user_id}", response_model=UserReadWithRecipes)
+# async def read_user(
+#     *, session: AsyncSession = Depends(get_session), user_id: int
+# ) -> User:
+#     user = await session.get(User, user_id)
+#     if not user:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     return user
 
 
 @router.post("/", response_model=User)
 async def create_user(
-    *, session: AsyncSession = Depends(get_session), user: User
+    *, session: AsyncSession = Depends(get_session), user: UserCreate
 ) -> User:
     db_user = User.from_orm(user)
     session.add(db_user)

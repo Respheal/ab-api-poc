@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from app import get_settings
 from app.db.models import HealthCheck
-from app.routers import users, recipes
+from app.routers import users, comic
 
 settings = get_settings()
 
@@ -15,7 +15,7 @@ app = FastAPI(
 )
 
 app.include_router(users.router)
-app.include_router(recipes.router)
+app.include_router(comic.router)
 
 
 @app.get("/", response_model=HealthCheck, tags=["status"])
