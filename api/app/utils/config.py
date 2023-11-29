@@ -10,12 +10,12 @@ class Settings(BaseSettings):
     environment: str = "development"
 
     # Database
-    postgres_host: str | None
-    postgres_db: str | None
-    postgres_user: str | None
-    postgres_password: str | None
+    postgres_host: str | None = None
+    postgres_db: str | None = None
+    postgres_user: str | None = None
+    postgres_password: str | None = None
 
     # Celery
 
-    celery_broker_url: str | None
-    celery_result_backend: str | None
+    celery_broker_url: str | None = None
+    celery_result_backend: str | None = None

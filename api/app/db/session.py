@@ -1,8 +1,9 @@
 from pathlib import Path
+from typing import AsyncGenerator
 
 from sqlalchemy import MetaData
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.orm import declarative_base
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -48,13 +49,13 @@ else:
     )
 
 
-async_session = sessionmaker(
+async_session = async_sessionmaker(
     bind=engine, class_=AsyncSession, expire_on_commit=False
 )
 
 
 # get_session Dependency
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncGenerator:
     async with async_session() as session:
         yield session
 
@@ -71,3 +72,5 @@ metadata = MetaData(
 
 Base = declarative_base(metadata=metadata)
 SQLModel.metadata = Base.metadata
+
+__all__ = ["SQLModel"]

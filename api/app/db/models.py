@@ -26,7 +26,7 @@ class User(UserBase, table=True):
         back_populates="submitter",
         sa_relationship_kwargs={
             "cascade": "all,delete,delete-orphan",
-            "lazy": "selectin",  # https://docs.sqlalchemy.org/en/14/orm/loading_relationships.html#relationship-loading-techniques
+            "lazy": "selectin",  # https://docs.sqlalchemy.org/en/14/orm/loading_relationships.html#relationship-loading-techniques  # noqa
         },
     )
 
