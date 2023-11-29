@@ -1,24 +1,27 @@
+from typing import Any
+
 from fastapi import FastAPI
-from celery import Celery
 
-app = FastAPI()
+from app import get_settings
+from app.db.models import HealthCheck
+from app.routers import users, recipes
 
+settings = get_settings()
 
-celery = Celery(
-    __name__, broker="redis://redis:6379/0", backend="redis://redis:6379/0"
+app = FastAPI(
+    title=settings.project_name,
+    version=settings.version,
+    debug=settings.debug,
 )
 
-
-@app.get("/")
-def read_root() -> dict[str, str]:
-    return {"msg": "Hello World"}
+app.include_router(users.router)
+app.include_router(recipes.router)
 
 
-@app.get("/test")
-def read_test() -> dict[str, str]:
-    return {"msg": "Hello World :3"}
-
-
-@celery.task
-def divide(x: int, y: int) -> float:
-    return float(x / y)
+@app.get("/", response_model=HealthCheck, tags=["status"])
+def health_check() -> dict[str, Any]:
+    return {
+        "name": settings.project_name,
+        "version": settings.version,
+        "description": settings.description,
+    }

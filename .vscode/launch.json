@@ -11,7 +11,9 @@
           "module": "uvicorn",
           "args": [
               "api.app.main:app",
-              "--reload"
+              "--reload",
+              "--env-file",
+              ".env/.env.dev"
           ],
           "jinja": true,
           "justMyCode": true

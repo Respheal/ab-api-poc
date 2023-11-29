@@ -7,7 +7,7 @@ defaults:
 
 on:
   push:
-    # branches: ["main"]
+    branches: ["main"]
     paths:
       - api/**/*.py
       - poetry.lock
@@ -39,8 +39,14 @@ jobs:
       - name: Install Dependencies
         run: poetry install --without server
 
-      - name: Run Tox (Lint)
-        run: poetry run tox -e lint
+      - name: Run Tox (flake8)
+        run: poetry run tox -e flake8
+
+      - name: Run Tox (mypy)
+        run: poetry run tox -e mypy
+
+      - name: Run Tox (bandit)
+        run: poetry run tox -e bandit
 
       - name: Run Tox (Pytest)
         run: poetry run tox -e pytest

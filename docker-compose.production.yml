@@ -1,3 +1,6 @@
+volumes:
+  postgres_data:
+
 services:
   api:
     image: api
@@ -6,7 +9,7 @@ services:
       - 8000:8000
     command: /commands/api
     env_file:
-      - .env/.env.dev
+      - .env/.env.prod
     depends_on:
       redis:
         condition: service_started
@@ -15,8 +18,10 @@ services:
 
   postgres:
     image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env/.env.dev
+      - .env/.env.prod
     healthcheck:
       test: /usr/bin/pg_isready
       interval: 5s
@@ -31,7 +36,7 @@ services:
     image: celery_worker
     command: celery -A app.worker.celery worker --loglevel=info
     env_file:
-      - .env/.env.dev
+      - .env/.env.prod
     depends_on:
       - redis
       - postgres
@@ -41,7 +46,7 @@ services:
     image: celery_worker
     command: celery -A app.worker.celery beat -l info
     env_file:
-      - .env/.env.dev
+      - .env/.env.prod
     depends_on:
       - redis
       - postgres
@@ -50,7 +55,7 @@ services:
     image: mher/flower
     command: celery flower --app=app.worker.celery --broker="redis://redis:6379/0"
     env_file:
-      - .env/.env.dev
+      - .env/.env.prod
     ports:
       - 5557:5555
     depends_on:
