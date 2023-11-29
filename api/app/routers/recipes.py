@@ -21,37 +21,37 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[RecipeRead])
-def read_recipes(
+async def read_recipes(
     session: AsyncSession = Depends(get_session),
 ) -> Sequence[Recipe]:
-    recipes = session.exec(select(Recipe)).all()
-    return recipes
+    recipes = await session.exec(select(Recipe))
+    return recipes.all()
 
 
-@router.get("/", response_model=RecipeReadWithUser)
-def read_recipe(
+@router.get("/{id}", response_model=RecipeReadWithUser)
+async def read_recipe(
     *, session: AsyncSession = Depends(get_session), id: int
 ) -> Recipe:
-    recipe = session.get(Recipe, id)
+    recipe = await session.get(Recipe, id)
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     return recipe
 
 
 @router.post("/", response_model=RecipeRead)
-def create_recipe(
+async def create_recipe(
     *, session: AsyncSession = Depends(get_session), recipe: RecipeCreate
 ) -> Recipe:
     db_recipe = Recipe.from_orm(recipe)
     db_recipe.submitter_id = 1
     session.add(db_recipe)
 
-    user = session.get(User, 1)
+    user = await session.get(User, 1)
     if user:
         user.recipes.append(db_recipe)
         session.add(user)
-    session.commit()
+    await session.commit()
 
-    session.refresh(db_recipe)
+    await session.refresh(db_recipe)
 
     return db_recipe

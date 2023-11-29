@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from sqlalchemy import MetaData
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
+from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -10,6 +10,8 @@ from app import get_settings
 
 settings = get_settings()
 
+# This is to ensure the sqlite DB ends up in the same place as when
+# created and managed by alembic
 sqlite_path = (
     f"sqlite+aiosqlite:///{Path(__file__).absolute().parent.parent.parent}"
 )

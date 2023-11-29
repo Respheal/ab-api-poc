@@ -24,7 +24,10 @@ class User(UserBase, table=True):
 
     recipes: list["Recipe"] = Relationship(
         back_populates="submitter",
-        sa_relationship_kwargs={"cascade": "all,delete,delete-orphan"},
+        sa_relationship_kwargs={
+            "cascade": "all,delete,delete-orphan",
+            "lazy": "selectin",  # https://docs.sqlalchemy.org/en/14/orm/loading_relationships.html#relationship-loading-techniques
+        },
     )
 
 
