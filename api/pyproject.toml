@@ -34,6 +34,7 @@ types-requests = "^2.31.0.10"
 
 [tool.poetry.group.security.dependencies]
 bandit = { extras = ["toml"], version = "^1.7.5" }
+pip-audit = "^2.6.1"
 
 [tool.poetry.group.dev.dependencies]
 tox = "^4.11.3"

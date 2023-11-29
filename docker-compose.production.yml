@@ -33,8 +33,8 @@ services:
 
   celery_worker:
     build: ./api
-    image: fastapi_celery_example_celery_worker
-    command: celery -A app.main.celery worker --loglevel=info
+    image: celery_worker
+    command: celery -A app.worker.celery worker --loglevel=info
     env_file:
       - .env/.env.prod
     depends_on:
@@ -43,8 +43,8 @@ services:
 
   celery_beat:
     build: ./api
-    image: fastapi_celery_example_celery_beat
-    command: celery -A app.main.celery beat -l info
+    image: celery_worker
+    command: celery -A app.worker.celery beat -l info
     env_file:
       - .env/.env.prod
     depends_on:
@@ -53,7 +53,7 @@ services:
 
   flower:
     image: mher/flower
-    command: celery flower --app=app.main.celery --broker="redis://redis:6379/0"
+    command: celery flower --app=app.worker.celery --broker="redis://redis:6379/0"
     env_file:
       - .env/.env.prod
     ports:
