@@ -1,5 +1,7 @@
-from sqlmodel import Field, SQLModel, Relationship
+from sqlmodel import Field, Relationship
 from pydantic import BaseModel
+
+from app.db.session import SQLModel
 
 
 class HealthCheck(BaseModel):

@@ -1,10 +1,18 @@
+from pathlib import Path
+
+from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app import get_settings
 
 settings = get_settings()
+
+sqlite_path = (
+    f"sqlite+aiosqlite:///{Path(__file__).absolute().parent.parent.parent}"
+)
 
 if settings.environment == "production":
     # Use postgres
@@ -13,26 +21,26 @@ if settings.environment == "production":
         f"{settings.postgres_user}:{settings.postgres_password}"
         f"@{settings.postgres_host}/{settings.postgres_db}"
     )
-    engine: AsyncEngine = create_async_engine(
+    engine = create_async_engine(
         SQLALCHEMY_URL,
         echo=False,
         pool_pre_ping=True,
         pool_size=64,
         max_overflow=200,
     )
-if settings.environment == "test":
-    SQLALCHEMY_URL = "sqlite+aiosqlite:///test.db"
+elif settings.environment == "test":
+    SQLALCHEMY_URL = rf"{sqlite_path}/test.db"
     engine = create_async_engine(
         SQLALCHEMY_URL,
-        echo=False,
+        echo=True,
         pool_pre_ping=True,
         connect_args={"check_same_thread": False},
     )
 else:
-    SQLALCHEMY_URL = "sqlite+aiosqlite:///database.db"
+    SQLALCHEMY_URL = rf"{sqlite_path}/database.db"
     engine = create_async_engine(
         SQLALCHEMY_URL,
-        echo=False,
+        echo=True,
         pool_pre_ping=True,
         connect_args={"check_same_thread": False},
     )
@@ -47,3 +55,17 @@ async_session = sessionmaker(
 async def get_session() -> AsyncSession:
     async with async_session() as session:
         yield session
+
+
+metadata = MetaData(
+    naming_convention={
+        "ix": "ix_%(column_0_label)s",
+        "uq": "uq_%(table_name)s_%(column_0_name)s",
+        "ck": "ck_%(table_name)s_%(constraint_name)s",
+        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+        "pk": "pk_%(table_name)s",
+    }
+)
+
+Base = declarative_base(metadata=metadata)
+SQLModel.metadata = Base.metadata
