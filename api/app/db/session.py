@@ -31,8 +31,8 @@ if settings.environment == "production":
         pool_size=64,
         max_overflow=200,
     )
-elif settings.environment == "test":
-    SQLALCHEMY_URL = rf"{sqlite_path}/test.db"
+elif settings.environment == "development":
+    SQLALCHEMY_URL = rf"{sqlite_path}/database.db"
     engine = create_async_engine(
         SQLALCHEMY_URL,
         echo=True,
@@ -40,7 +40,7 @@ elif settings.environment == "test":
         connect_args={"check_same_thread": False},
     )
 else:
-    SQLALCHEMY_URL = rf"{sqlite_path}/database.db"
+    SQLALCHEMY_URL = rf"{sqlite_path}/test.db"
     engine = create_async_engine(
         SQLALCHEMY_URL,
         echo=True,

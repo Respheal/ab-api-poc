@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     project_name: str = "project_name"
     version: str = "0.0.0"
     description: str = ""
-    environment: str = "development"
+    environment: str = ""
 
     # Database
     postgres_host: str | None = None
