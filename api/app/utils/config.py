@@ -1,4 +1,4 @@
-from pydantic import BaseSettings
+from pydantic import AnyHttpUrl, BaseSettings
 
 
 class Settings(BaseSettings):
@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     version: str = "0.0.0"
     description: str = ""
     environment: str = ""
+    backend_cors_origins: list[AnyHttpUrl] = ["http://localhost:3000"]
 
     # Database
     postgres_host: str | None = None

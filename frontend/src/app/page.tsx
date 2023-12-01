@@ -1,17 +1,20 @@
 'use client' // this signifies this component is on the "client" side of the app because it consumes an api https://react.dev/reference/react/use-client
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link'
 import axios from 'axios';
 
-const client = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com/posts" 
-});
+import FastAPIClient from '../client';
+import config from '../config';
+
+const client = new FastAPIClient(config);
 
 export default function Home() {
   return (
   <main>
     <div>
       <p>hewwo O:</p>
+      <Link href="/register">Dashboard</Link>
       <ApiExample />
     </div>
   </main>
@@ -24,7 +27,7 @@ function ApiExample() {
   useEffect(() => { //this causes the component to re-render if `post` is updated e.g. deleted https://react.dev/reference/react/useEffect
     async function getPost() {
       try {
-        const response = await client.get("/weh"); // get response from client
+        const response = await client.getComics(); // get response from client
         setPost(response.data); // update posts with response data
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -36,14 +39,14 @@ function ApiExample() {
           console.error(error);
         }
       }
-      const response = await client.get("/1") // good request to preserve example
+      const response = await client.getComic(1) // good request to preserve example
       setPost(response.data)
     }
     getPost();
   }, []); // you can add an attribute into this array to cause useEffect to *only* run if that attribute changes https://maxrozen.com/learn-useeffect-dependency-array-react-hooks
 
   async function deletePost() {
-    await client.delete("/1");
+    await client.deleteComic(1);
     alert("Post deleted!");
     setPost(null);
   }
@@ -52,7 +55,7 @@ function ApiExample() {
 
   return (
     <div>
-      <h1>{post.title}</h1>
+      <h1>{post.name}</h1>
       <p>{post.body}</p>
       <button onClick={deletePost}>Delete Post</button>
     </div>

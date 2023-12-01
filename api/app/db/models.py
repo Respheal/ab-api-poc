@@ -1,7 +1,6 @@
-from sqlmodel import Field, Relationship, JSON, Column
-from pydantic import BaseModel
-
 from app.db.session import SQLModel
+from pydantic import BaseModel
+from sqlmodel import JSON, Column, Field, Relationship
 
 
 # Pydantic-only Schemas
@@ -9,6 +8,15 @@ class HealthCheck(BaseModel):
     name: str
     version: str
     description: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None
 
 
 # Association Tables
@@ -71,7 +79,7 @@ class UserBase(SQLModel):
     """Common User fields."""
 
     name: str = Field(index=True)
-    email: str = Field(index=True, nullable=False)
+    email: str | None = Field(nullable=True)
     is_superuser: bool = Field(default=False)
 
 
@@ -79,15 +87,19 @@ class User(UserBase, table=True):
     """SQL-specific User fields."""
 
     id: int | None = Field(default=None, primary_key=True)
+    hashed_password: str = Field(nullable=False)
 
     subs: list["Comic"] = Relationship(
         back_populates="subscribers",
         link_model=ComicSubs,
+        sa_relationship_kwargs={
+            "lazy": "selectin",  # https://docs.sqlalchemy.org/en/14/orm/loading_relationships.html#relationship-loading-techniques  # noqa
+        },
     )
 
 
 class UserCreate(UserBase):
-    pass
+    password: str
 
 
 class UserRead(UserBase):
