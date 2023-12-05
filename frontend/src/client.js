@@ -60,6 +60,16 @@ class FastAPIClient {
         });
   }
 
+
+  register_google(jwt) {
+    const registerData = {jwt: jwt};
+
+    return this.apiClient.post('/users/google', registerData).then(
+        (resp) => {
+          return resp.data;
+        });
+  }
+
   // Logging out is just deleting the jwt.
   logout() {
     // Add here any other data that needs to be deleted from local storage

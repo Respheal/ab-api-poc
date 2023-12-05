@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
-from app.db.models import Token, User
+from app.db.models import Token
 from app.db.session import get_session
 from app.utils.security import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
@@ -38,17 +38,3 @@ async def login_for_access_token(
         data={"sub": user.name}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
-
-
-@router.get("/users/me/", response_model=User)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_user)]
-):
-    return current_user
-
-
-@router.get("/users/me/items/")
-async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_user)]
-):
-    return [{"item_id": "Foo", "owner": current_user.name}]

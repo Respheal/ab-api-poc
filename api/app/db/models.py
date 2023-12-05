@@ -78,7 +78,7 @@ class ComicCreate(ComicBase):
 class UserBase(SQLModel):
     """Common User fields."""
 
-    name: str = Field(index=True)
+    name: str
     email: str | None = Field(nullable=True)
     is_superuser: bool = Field(default=False)
 
@@ -86,7 +86,7 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     """SQL-specific User fields."""
 
-    id: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, index=True, primary_key=True)
     hashed_password: str = Field(nullable=False)
 
     subs: list["Comic"] = Relationship(
@@ -113,6 +113,13 @@ class UserUpdate(SQLModel):
 
 class UserReadWithSubs(UserRead):
     subs: list[ComicBase] = []
+
+
+class OpenIDUser(SQLModel, table=True):
+    id: int = Field(default=None, index=True, primary_key=True)
+    user: int = Field(default=None, foreign_key="user.id")
+    openid: str
+    provider: str
 
 
 # class UserBase(SQLModel):

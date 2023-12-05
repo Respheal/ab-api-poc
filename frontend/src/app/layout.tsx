@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Open_Sans } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import Navigation from './components/navigation';
 
@@ -14,11 +15,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
+    <GoogleOAuthProvider clientId="751923381039-do8cbpk1fljvos3k118r3n1tuscfhllv.apps.googleusercontent.com">
     <html lang="en">
       <body className={open_sans.className + " container"}>
         <Navigation />
         {children}
       </body>
     </html>
+    </GoogleOAuthProvider>
   )
 }

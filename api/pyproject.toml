@@ -20,6 +20,7 @@ alembic = "^1.12.1"
 python-multipart = "^0.0.6"
 authlib = "^1.2.1"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+google-auth = "^2.24.0"
 
 [tool.poetry.group.pytest.dependencies]
 pytest = "^7.4.3"

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'
+import { GoogleLogin } from '@react-oauth/google'
 import axios from 'axios';
 
 import FastAPIClient from '../../client';
@@ -18,6 +19,7 @@ const Register = () => {
   const [error, setError] = useState(false);
   const router = useRouter()
 
+  // Standard user/password Registration
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -32,6 +34,16 @@ const Register = () => {
         } else {console.error(err);}
       });
   };
+
+  function google_registration(response){
+    client.register_google(response.credential)
+    .then(() => {router.push("/")})
+    .catch( (err) => {
+      if (axios.isAxiosError(err)) {
+        setError(err.message);
+      } else {console.error(err);}
+    });
+  }
 
   return (
     <div>
@@ -71,6 +83,18 @@ const Register = () => {
         </Form.Group>
         <Button type="submit">Register</Button>
       </Form>
+
+      <GoogleLogin
+        onSuccess={credentialResponse => {
+          console.log(credentialResponse);
+          console.log(credentialResponse.credential);
+          google_registration(credentialResponse);
+        }}
+        onError={() => {
+          console.log('Login Failed');
+        }}
+      />;
+
     </div>
   );
 };
