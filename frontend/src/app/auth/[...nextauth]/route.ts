@@ -2,8 +2,11 @@ import NextAuth from "next-auth"
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import AppleProvider from "next-auth/providers/apple"
+import DiscordProvider from "next-auth/providers/discord";
+import LineProvider from "next-auth/providers/line";
 
-import User from '../../../client'
+import { User } from '../../../client'
 
 const handler = NextAuth({
   debug: process.env.DEBUG,
@@ -39,6 +42,18 @@ const handler = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+    AppleProvider({
+      clientId: process.env.APPLE_ID,
+      clientSecret: process.env.APPLE_SECRET
+    }),
+    DiscordProvider({
+      clientId: process.env.DISCORD_CLIENT_ID,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET
+    }),
+    LineProvider({
+      clientId: process.env.LINE_CLIENT_ID,
+      clientSecret: process.env.LINE_CLIENT_SECRET
+    })
   ],
   callbacks: {
     async jwt({ token, user, account, profile }) {

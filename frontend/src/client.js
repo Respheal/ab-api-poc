@@ -15,7 +15,7 @@ function objectToQueryString(obj) {
 /**
  * User-specific endpoint functions
  */
-const User = {
+export const User = {
     /**
      * Given user data, search the API for a single user matching data.
      * @param {Object} userData  Key-value pairs with which to search the API.
@@ -55,4 +55,61 @@ const User = {
     },
 };
 
-export default User;
+/**
+ * Comic-specific endpoint functions
+ */
+export const Comic = {
+    /**
+     * Given comic data, search the API for a single comic matching data.
+     * @param {Object} comicData  Key-value pairs with which to search the API.
+     */
+    async searchComic(comicData) {
+        try {
+            const response = await fetch(
+                `${baseUrl}/comic/?${objectToQueryString(comicData)}`,
+                { method: "GET" }
+            );
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            if (data && data[0]) {
+                return data[0];
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    },
+    async createComic(comicData) {
+        try {
+            const response = await fetch(`${baseUrl}/comic/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(comicData),
+            });
+
+            const result = await response.json();
+            console.log("Success:", result);
+            if (result) {
+                return result;
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    },
+    async getComic(id) {
+        try {
+            const response = await fetch(`${baseUrl}/comic/${id}`, {
+                method: "GET",
+            });
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    },
+};
