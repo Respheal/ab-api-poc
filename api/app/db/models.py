@@ -87,7 +87,7 @@ class User(UserBase, table=True):
     """SQL-specific User fields."""
 
     id: int | None = Field(default=None, index=True, primary_key=True)
-    hashed_password: str = Field(nullable=False)
+    hashed_password: str | None = Field(nullable=False)
 
     subs: list["Comic"] = Relationship(
         back_populates="subscribers",
@@ -99,7 +99,10 @@ class User(UserBase, table=True):
 
 
 class UserCreate(UserBase):
-    password: str
+    name: str | None
+    password: str | None
+    oauth_id: str | None
+    oauth_provider: str | None
 
 
 class UserRead(UserBase):

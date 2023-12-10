@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 const client = axios.create({
   baseURL: "https://jsonplaceholder.typicode.com/posts" 
@@ -20,6 +21,7 @@ export default function Home() {
 
 function ApiExample() {
   const [post, setPost] = useState<any>(null);
+  const { data } = useSession();
 
   useEffect(() => { //this causes the component to re-render if `post` is updated e.g. deleted https://react.dev/reference/react/useEffect
     async function getPost() {
@@ -50,10 +52,17 @@ function ApiExample() {
 
   if (!post) return "No post!"
 
+  if (data) { console.log(data) };
+
   return (
     <div>
       <h1>{post.title}</h1>
-      <p>{post.body}</p>
+      {data ? (
+          <p>Access Token: {data.user.email}</p>
+        ) : (
+          <div />
+        )}
+      
       <button onClick={deletePost}>Delete Post</button>
     </div>
   );

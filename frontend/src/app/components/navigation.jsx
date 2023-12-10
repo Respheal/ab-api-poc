@@ -18,7 +18,8 @@ function Navigation() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav variant="tabs" className="me-auto" defaultActiveKey="/">
             <Nav.Link as={Link} active={pathname == "/" ? true : false } eventKey="1" href="/">Some Page</Nav.Link>
-            <Nav.Link as={Link} active={pathname == "/register" ? true : false } eventKey="2" href="/register">Some Page</Nav.Link>
+            <Nav.Link as={Link} active={pathname == "/about" ? true : false } eventKey="1" href="/about">About</Nav.Link>
+            <Nav.Link as={Link} active={pathname == "/auth/signin" ? true : false } eventKey="2" href="/auth/signin">Register</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

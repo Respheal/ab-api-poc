@@ -1,12 +1,11 @@
-from typing import Annotated, Sequence
+from typing import Annotated
 
 from app.db.crud import user as crud_user
-from app.db.models import OpenIDUser, User, UserCreate, UserReadWithSubs
+from app.db.models import User, UserCreate, UserReadWithSubs
 from app.db.session import get_session
-from app.utils.security import get_current_user, get_password_hash
-from fastapi import APIRouter, Body, Depends, HTTPException, status
-from google.auth.transport import requests
-from google.oauth2 import id_token
+from app.utils.security import get_current_user
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import Sequence
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 router = APIRouter(
@@ -21,8 +20,21 @@ async def read_users(
     session: AsyncSession = Depends(get_session),
     skip: int = 0,
     limit: int = 5000,
+    email: str | None = None,
+    oauth_id: str | None = None,
+    oauth_provider: str | None = None,
 ) -> Sequence[User]:
-    return await crud_user.get_users(session, skip, limit)
+    # oauth id and provider must both be empty or both have values
+    if bool(oauth_id) != bool(oauth_provider):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "OAuth ID and Provider must both be empty or both have values."
+            ),
+        )
+    return await crud_user.get_users(
+        session, skip, limit, email, oauth_id, oauth_provider
+    )
 
 
 @router.get("/{user_id}", response_model=UserReadWithSubs)
@@ -41,49 +53,27 @@ async def read_user(
 async def create_user(
     *, session: AsyncSession = Depends(get_session), user: UserCreate
 ) -> User:
-    db_user = User.from_orm(
-        user, {"hashed_password": get_password_hash(user.password)}
+    # oauth id and provider must both be empty or both have values
+    if bool(user.oauth_id) != bool(user.oauth_provider):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "OAuth ID and Provider must both be empty or both have values."
+            ),
+        )
+    # Check if the user already exists
+    check_user: User | None = await crud_user.get_users(
+        session,
+        email=user.email,
+        oauth_id=user.oauth_id,
+        oauth_provider=user.oauth_provider,
     )
-    session.add(db_user)
-    await session.commit()
-    await session.refresh(db_user)
-    return db_user
-
-
-@router.post("/google", response_model=User)
-async def create_google_user(
-    *,
-    session: AsyncSession = Depends(get_session),
-    jwt: Annotated[str, Body(embed=True)]
-) -> User:
-    # Specify the CLIENT_ID of the app that accesses the backend:
-    idinfo = id_token.verify_oauth2_token(
-        jwt,
-        requests.Request(),
-        "751923381039-do8cbpk1fljvos3k118r3n1tuscfhllv.apps.googleusercontent.com",
-        clock_skew_in_seconds=2,
-    )
-
-    # except ValueError:
-    #     # Invalid token
-    #     pass
-
-    db_user = User(
-        name="weh",
-        email=idinfo["email"],
-        hashed_password=get_password_hash("aaaaaaaa"),
-    )
-    session.add(db_user)
-    await session.commit()
-    await session.refresh(db_user)
-
-    openid_user = OpenIDUser(
-        user=db_user.id, openid=idinfo["sub"], provider="google"
-    )
-    session.add(openid_user)
-    await session.commit()
-
-    return db_user
+    if check_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=("User already exists."),
+        )
+    return await crud_user.create_user(session, user)
 
 
 @router.get("/users/me/", response_model=User)
