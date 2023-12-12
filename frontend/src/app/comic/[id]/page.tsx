@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
-import { Comic } from '../../../client'
+import { Comic } from '@/client';
 
 export default function ComicPage({ params }: { params: { id: number } }) {
   const [post, setPost] = useState<any>(null);
@@ -17,13 +17,13 @@ export default function ComicPage({ params }: { params: { id: number } }) {
     getComic();
   }, []); // you can add an attribute into this array to cause useEffect to *only* run if that attribute changes https://maxrozen.com/learn-useeffect-dependency-array-react-hooks
 
-  async function submitComic() {
-    alert("Comic Created!");
-    const comic = await Comic.createComic({name: "Comic Name Lorem"})
-    if(comic){
-      setPost(comic.name);
-    }
-  }
+  // async function submitComic() {
+  //   alert("Comic Created!");
+  //   const comic = await Comic.createComic({name: "Comic Name Lorem"})
+  //   if(comic){
+  //     setPost(comic.name);
+  //   }
+  // }
 
   async function deletePost() {
     alert("Post deleted!");
@@ -44,7 +44,7 @@ export default function ComicPage({ params }: { params: { id: number } }) {
         )}
       
       <button onClick={deletePost}>Delete Post</button>
-      <button onClick={submitComic}>Create Comic</button>
+      <form action="{Comic.createComic()}>"><button>Create Comic</button></form>
     </div>
   </main>
   )

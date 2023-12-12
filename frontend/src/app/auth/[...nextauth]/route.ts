@@ -6,10 +6,10 @@ import AppleProvider from "next-auth/providers/apple"
 import DiscordProvider from "next-auth/providers/discord";
 import LineProvider from "next-auth/providers/line";
 
-import { User } from '../../../client'
+import { User } from "@/client";
 
 const handler = NextAuth({
-  debug: process.env.DEBUG,
+  debug: (process.env.DEBUG =="true"),
   session: { strategy: "jwt" },
   providers: [
     CredentialsProvider({
@@ -58,12 +58,14 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user, account, profile }) {
       if (account && profile) {
-        // grab the user id from the DB, stuff that in the token
+        // grab the user id from the DB, load that into the token
         // token.account = {provider: account.provider, id: account.providerAccountId}
-        const abapiUser = await User.searchUser({oauth_id: account.providerAccountId, oauth_provider: account.provider})
+        let abapiUser = await User.searchUser({oauth_id: account.providerAccountId, oauth_provider: account.provider})
         if (abapiUser) {token.uid = abapiUser.id}
         else {
-          User.createUser({email: profile.email, oauth_id: account.providerAccountId, oauth_provider: account.provider})
+          // The user doesn't exist; create them and load their id
+          abapiUser = await User.createUser({email: profile.email, oauth_id: account.providerAccountId, oauth_provider: account.provider})
+          token.uid = abapiUser.id
         }        
       }
       return token
