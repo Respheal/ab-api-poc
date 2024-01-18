@@ -78,7 +78,7 @@ class ComicCreate(ComicBase):
 class UserBase(SQLModel):
     """Common User fields."""
 
-    name: str
+    name: str | None
     email: str | None = Field(nullable=True)
     is_superuser: bool = Field(default=False)
 
@@ -86,8 +86,9 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     """SQL-specific User fields."""
 
-    id: int | None = Field(default=None, index=True, primary_key=True)
-    hashed_password: str | None = Field(nullable=False)
+    name: str
+    id: int = Field(index=True, primary_key=True)
+    hashed_password: str = Field(nullable=False)
 
     subs: list["Comic"] = Relationship(
         back_populates="subscribers",
@@ -99,7 +100,6 @@ class User(UserBase, table=True):
 
 
 class UserCreate(UserBase):
-    name: str | None
     password: str | None
     oauth_id: str | None
     oauth_provider: str | None
@@ -123,65 +123,3 @@ class OpenIDUser(SQLModel, table=True):
     user: int = Field(default=None, foreign_key="user.id")
     openid: str
     provider: str
-
-
-# class UserBase(SQLModel):
-#     name: str = Field(index=True)
-#     email: str = Field(index=True, nullable=False)
-#     is_superuser: bool = Field(default=False)
-
-
-# class User(UserBase, table=True):
-#     id: int | None = Field(default=None, primary_key=True)
-
-#     recipes: list["Recipe"] = Relationship(
-#         back_populates="submitter",
-#         sa_relationship_kwargs={
-#             "cascade": "all,delete,delete-orphan",
-#             "lazy": "selectin",  # https://docs.sqlalchemy.org/en/14/orm/loading_relationships.html#relationship-loading-techniques  # noqa
-#         },
-#     )
-
-
-# class UserCreate(UserBase):
-#     pass
-
-
-# class UserRead(UserBase):
-#     id: int
-
-
-# class UserUpdate(SQLModel):
-#     id: int | None = None
-#     name: str | None = None
-#     headquarters: str | None = None
-
-
-# class RecipeBase(SQLModel):
-#     label: str = Field(max_length=256, nullable=False)
-#     url: str = Field(max_length=256, index=True, nullable=True)
-#     source: str = Field(max_length=256, nullable=True)
-
-#     submitter_id: int | None = Field(default=None, foreign_key="user.id")
-
-
-# class Recipe(RecipeBase, table=True):
-#     id: int | None = Field(default=None, primary_key=True)
-
-#     submitter: User | None = Relationship(back_populates="recipes")
-
-
-# class RecipeCreate(RecipeBase):
-#     pass
-
-
-# class RecipeRead(RecipeBase):
-#     id: int
-
-
-# class RecipeReadWithUser(RecipeRead):
-#     submitter: UserRead | None = None
-
-
-# class UserReadWithRecipes(UserRead):
-#     recipes: list[RecipeRead] = []
