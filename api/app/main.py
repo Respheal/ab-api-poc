@@ -1,10 +1,11 @@
 from typing import Any
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from app import get_settings
 from app.db.models import HealthCheck
 from app.routers import auth, comic, users
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 settings = get_settings()
 

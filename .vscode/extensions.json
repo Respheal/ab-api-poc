@@ -1,7 +1,7 @@
 {
     "recommendations": [
-        "ms-python.black-formatter",
-        "ms-python.flake8",
+        "editorconfig.editorconfig",
+        "charliermarsh.ruff",
         "ms-python.vscode-pylance",
         "ms-python.python",
         "esbenp.prettier-vscode",

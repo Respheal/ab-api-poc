@@ -2,24 +2,25 @@
     "files.associations": {
         "**/.dockerignore": "ignore",
         "**/.ini": "properties",
+        "**/docker-compose.*.yml": "dockercompose"
     },
     "files.exclude": {
         "**/__pycache__/**": true,
         "**/.mypy_cache/**": true,
         "**/.pytest_cache/**": true,
         "**/venv/**": true,
+        "**/.tox/**": true,
     },
     "editor.formatOnSave": true,
     "editor.minimap.maxColumn": 99,
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+          "source.fixAll": "explicit",
+          "source.organizeImports": "explicit"
         },
     },
-    "isort.args":["--profile", "black"],
-    "black-formatter.importStrategy": "fromEnvironment",
     "python.testing.pytestArgs": [
         "--cov",
         "api",

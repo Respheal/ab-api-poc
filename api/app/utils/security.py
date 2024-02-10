@@ -1,20 +1,24 @@
 from datetime import datetime, timedelta
 from typing import Annotated
 
-from app.db.crud.user import get_user_by_name
-from app.db.models import TokenData, User
-from app.db.session import get_session
 from authlib.jose import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app import get_settings
+from app.db.crud.user import get_user_by_name
+from app.db.models import TokenData, User
+from app.db.session import get_session
+
+settings = get_settings()
+
 PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
-SECRET_KEY = "4d7a2388684b2a1597348ff66e1da8bbcaa98c0c75e579ce8ff7a6c7f4167b12"
+SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 HEADER = {"alg": ALGORITHM}
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.token_expiration
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
@@ -32,6 +36,8 @@ async def authenticate_user(
     user: User | None = await get_user_by_name(session, username)
     if not user:
         return None
+    if not user.hashed_password:
+        return None
     if not verify_password(password, user.hashed_password):
         return None
     return user
@@ -48,7 +54,7 @@ def create_access_token(
     to_encode.update({"exp": expire})
     # encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     encoded_jwt = jwt.encode(header=HEADER, payload=to_encode, key=SECRET_KEY)
-    return encoded_jwt
+    return str(encoded_jwt)
 
 
 async def get_current_user(
@@ -67,6 +73,8 @@ async def get_current_user(
     if username is None:
         raise credentials_exception
     token_data = TokenData(username=username)
+    if token_data.username is None:
+        raise credentials_exception
     # except JWTError:
     #     raise credentials_exception
     user: User | None = await get_user_by_name(

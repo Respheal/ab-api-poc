@@ -1,9 +1,11 @@
+from typing import Sequence
+
+from sqlmodel import col, select
+from sqlmodel.ext.asyncio.session import AsyncSession
+
 import app.utils.security as security_utils
 from app.db.models import OpenIDUser, User, UserCreate
 from app.utils.generators import namegenerator, passgenerator
-from sqlalchemy import Sequence
-from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
 
 
 async def get_users(
@@ -22,7 +24,7 @@ async def get_users(
         )
     if email:
         statement = statement.where(User.email == email)
-    statement = statement.order_by(User.id).offset(skip).limit(limit)
+    statement = statement.order_by(col(User.id)).offset(skip).limit(limit)
     users = await session.exec(statement)
     return users.all()
 
@@ -48,8 +50,8 @@ async def create_user(session: AsyncSession, user: UserCreate) -> User:
     return db_user
 
 
-async def get_user_by_id(session: AsyncSession, user_id: int) -> User | None:
-    return await session.get(User, user_id)
+async def get_user(session: AsyncSession, id: int) -> User | None:
+    return await session.get(User, id)
 
 
 async def get_user_by_name(session: AsyncSession, name: str) -> User | None:

@@ -1,10 +1,10 @@
 from typing import Sequence
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.db.models import Comic, ComicCreate, ComicRead, ComicList
+from app.db.crud import comic as crud_comic
+from app.db.models import Comic, ComicCreate, ComicList
 from app.db.session import get_session
 
 router = APIRouter(
@@ -17,12 +17,13 @@ router = APIRouter(
 @router.get("/", response_model=list[ComicList])
 async def get_comics(
     session: AsyncSession = Depends(get_session),
+    skip: int = 0,
+    limit: int = 5000,
 ) -> Sequence[Comic]:
-    comics = await session.exec(select(Comic))
-    return comics.all()
+    return await crud_comic.get_comics(session, skip, limit)
 
 
-@router.get("/{id}", response_model=ComicRead)
+@router.get("/{id}", response_model=Comic)
 async def get_comic(
     *, session: AsyncSession = Depends(get_session), id: int
 ) -> Comic:
@@ -32,13 +33,8 @@ async def get_comic(
     return comic
 
 
-@router.post("/", response_model=ComicRead)
+@router.post("/", response_model=Comic)
 async def create_comic(
     *, session: AsyncSession = Depends(get_session), comic: ComicCreate
 ) -> Comic:
-    db_comic = Comic.from_orm(comic)
-    session.add(db_comic)
-    await session.commit()
-    await session.refresh(db_comic)
-
-    return db_comic
+    return await crud_comic.create_comic(session, comic)

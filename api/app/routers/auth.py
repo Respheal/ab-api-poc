@@ -1,17 +1,17 @@
 from datetime import timedelta
 from typing import Annotated
 
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlmodel.ext.asyncio.session import AsyncSession
+
 from app.db.models import Token
 from app.db.session import get_session
 from app.utils.security import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     authenticate_user,
     create_access_token,
-    get_current_user,
 )
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlmodel.ext.asyncio.session import AsyncSession
 
 router = APIRouter(
     prefix="/auth",
@@ -23,7 +23,7 @@ router = APIRouter(
 async def login_for_access_token(
     session: Annotated[AsyncSession, Depends(get_session)],
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-):
+) -> dict[str, str]:
     user = await authenticate_user(
         session, form_data.username, form_data.password
     )

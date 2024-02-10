@@ -1,12 +1,12 @@
-from typing import Annotated
+from typing import Annotated, Sequence
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db.crud import user as crud_user
 from app.db.models import User, UserCreate, UserReadWithSubs
 from app.db.session import get_session
 from app.utils.security import get_current_user
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import Sequence
-from sqlmodel.ext.asyncio.session import AsyncSession
 
 router = APIRouter(
     prefix="/users",
@@ -41,7 +41,7 @@ async def read_users(
 async def read_user(
     *, session: AsyncSession = Depends(get_session), user_id: int
 ) -> User:
-    user: User | None = await crud_user.get_user_by_id(session, user_id)
+    user: User | None = await crud_user.get_user(session, user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
@@ -62,7 +62,7 @@ async def create_user(
             ),
         )
     # Check if the user already exists
-    check_user: User | None = await crud_user.get_users(
+    check_user: Sequence[User] = await crud_user.get_users(
         session,
         email=user.email,
         oauth_id=user.oauth_id,
@@ -78,6 +78,6 @@ async def create_user(
 
 @router.get("/users/me/", response_model=User)
 async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_user)]
-):
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> User:
     return current_user

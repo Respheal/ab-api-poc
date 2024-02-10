@@ -1,21 +1,21 @@
-from app.db.session import SQLModel
-from pydantic import BaseModel
 from sqlmodel import JSON, Column, Field, Relationship
+
+from app.db.session import SQLModel
 
 
 # Pydantic-only Schemas
-class HealthCheck(BaseModel):
+class HealthCheck(SQLModel):
     name: str
     version: str
     description: str
 
 
-class Token(BaseModel):
+class Token(SQLModel):
     access_token: str
     token_type: str
 
 
-class TokenData(BaseModel):
+class TokenData(SQLModel):
     username: str | None = None
 
 
