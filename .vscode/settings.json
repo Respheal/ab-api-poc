@@ -13,6 +13,11 @@
     },
     "editor.formatOnSave": true,
     "editor.minimap.maxColumn": 99,
+    "ruff.enable": true,
+    "ruff.fixAll": true,
+    "ruff.organizeImports": true,
+    "mypy.runUsingActiveInterpreter": true,
+    "mypy.configFile": "api/pyproject.toml",
     "[python]": {
       "editor.defaultFormatter": "charliermarsh.ruff",
       "editor.formatOnSave": true,
@@ -29,9 +34,5 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "mypy-type-checker.interpreter": [],
-    "mypy-type-checker.args": [
-        "--config-file=${workspaceFolder}/api/pyproject.toml"
-    ],
-    "mypy-type-checker.preferDaemon": true
 }
+

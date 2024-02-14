@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
-from typing import Annotated
+from typing import Annotated, Any
 
+import bcrypt
 from authlib.jose import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from passlib.context import CryptContext
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app import get_settings
@@ -14,7 +14,6 @@ from app.db.session import get_session
 
 settings = get_settings()
 
-PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 HEADER = {"alg": ALGORITHM}
@@ -23,11 +22,18 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bool(PWD_CONTEXT.verify(plain_password, hashed_password))
+    # Check if the provided password matches the stored password (hashed)
+    return bcrypt.checkpw(
+        password=plain_password.encode("utf-8"),
+        hashed_password=hashed_password.encode("utf-8"),
+    )
 
 
 def get_password_hash(password: str) -> str:
-    return str(PWD_CONTEXT.hash(password))
+    # Hash a password using bcrypt
+    return str(
+        bcrypt.hashpw(password=password.encode("utf-8"), salt=bcrypt.gensalt())
+    )
 
 
 async def authenticate_user(
@@ -44,7 +50,7 @@ async def authenticate_user(
 
 
 def create_access_token(
-    data: dict, expires_delta: timedelta | None = None
+    data: dict[str, Any], expires_delta: timedelta | None = None
 ) -> str:
     to_encode = data.copy()
     if expires_delta:

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator
 
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
@@ -46,7 +46,7 @@ async_session = async_sessionmaker(
 
 
 # get_session Dependency
-async def get_session() -> AsyncGenerator:
+async def get_session() -> AsyncGenerator[AsyncSession, Any]:
     async with async_session() as session:
         yield session
 

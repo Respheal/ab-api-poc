@@ -8,18 +8,18 @@ authors = ["Madeleine Ethridge <madeleine.ethridge@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.109.0"
+fastapi = "^0.109.2"
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.3"
 lxml = "^4.9.4"
 python-multipart = "^0.0.6"
 authlib = "^1.3.0"
-passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 google-auth = "^2.27.0"
 sqlmodel = "^0.0.14"
 alembic = { extras = ["tz"], version = "^1.13.1" }
 celery = { extras = ["redis"], version = "^5.3.6" }
 pydantic-settings = "^2.1.0"
+bcrypt = "^4.1.2"
 
 [tool.poetry.group.pytest.dependencies]
 pytest = "^7.4.4"
@@ -32,10 +32,14 @@ pytest-dotenv = "^0.5.2"
 [tool.poetry.group.lint.dependencies]
 mypy = "^1.8.0"
 ruff = "^0.2.1"
+celery-types = "^0.22.0"
+types-requests = "^2.31.0.20240125"
+lxml-stubs = "^0.5.1"
+types-beautifulsoup4 = "^4.12.0.20240106"
 
 [tool.poetry.group.security.dependencies]
 bandit = { extras = ["toml"], version = "^1.7.7" }
-pip-audit = "^2.7.0"
+pip-audit = "^2.7.1"
 
 [tool.poetry.group.dev.dependencies]
 tox = "^4.12.1"
@@ -67,20 +71,15 @@ select = ["E4", "E7", "E9", "F", "I001"]
 
 [tool.mypy]
 plugins = ["sqlalchemy.ext.mypy.plugin"]
+packages = "app"
+exclude = ["migrations", "tests"]
 show_error_context = true
-show_error_codes = true
 strict = true
 
-disallow_any_generics = false
-disallow_any_unimported = false
-disallow_subclassing_any = false
-disallow_untyped_defs = true
-disallow_untyped_calls = false
-disallow_untyped_decorators = false
+[[tool.mypy.overrides]]
+# These modules don't have mypy stubs
+module = ["authlib.jose", "authlib.jose.errors"]
 ignore_missing_imports = true
-no_implicit_optional = true
-warn_return_any = true
-warn_unused_ignores = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
